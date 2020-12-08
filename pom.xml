@@ -2,6 +2,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.revature</groupId>
   <artifactId>project-0-kelvintrinh174</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>BankingApp</name>
 </project>
