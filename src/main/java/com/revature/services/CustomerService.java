@@ -1,9 +1,9 @@
-package com.revature.repositories;
+package com.revature.services;
 
 import com.revature.models.User;
 
-public interface CustomerDAO {
-		
+public interface CustomerService {
+	  
 	public void viewBalance();
 	
 	public void applyNewAccount(User customer);
@@ -11,6 +11,4 @@ public interface CustomerDAO {
 	
 	public boolean transferMoney(String email, double amount);
 	public boolean acceptMoneyTransfer();
-	
-	
 }
