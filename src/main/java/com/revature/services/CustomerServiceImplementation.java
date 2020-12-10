@@ -40,7 +40,7 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
 	//Customer Login
 	public void userLogIn(String email, String password, boolean isCustomer) {
 		User user = uid.findOne(email, password, isCustomer);	
-		if(user!=null) {
+		if(user!= null) {
 		   System.out.println("Welcome, "+ user.getEmail());
 		}
 		else {

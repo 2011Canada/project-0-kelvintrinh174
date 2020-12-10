@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.models.User;
 import com.revature.repositories.UserImplementationDAO;
 
 public class EmployeeServiceImplementation implements EmployeeService, UserService {
@@ -13,7 +14,13 @@ public class EmployeeServiceImplementation implements EmployeeService, UserServi
 	
 	//
 	public void userLogIn(String email, String password, boolean isCustomer) {
-		// TODO Auto-generated method stub
+		User user = uid.findOne(email, password, isCustomer);	
+		if(user!= null) {
+		   System.out.println("Welcome, "+ user.getEmail());
+		}
+		else {
+			System.out.println(" User is not found");
+		}
 
 	}
 
