@@ -1,8 +1,11 @@
 package com.revature.menus;
 
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.revature.exceptions.InternalErrorException;
+import com.revature.exceptions.UserNotFoundException;
 import com.revature.services.CustomerServiceImplementation;
 import com.revature.services.EmployeeServiceImplementation;
 
@@ -11,16 +14,12 @@ public class UserMenu implements Displayable {
 	  private CustomerServiceImplementation csi;
 	  private EmployeeServiceImplementation esi;
 	  Scanner userIn;
-	  Scanner inputEmail;
-	  Scanner inputPassword;
 	 
 	  
 	  public UserMenu(CustomerServiceImplementation csi, EmployeeServiceImplementation esi) {
 		  this.csi = csi;
 		  this.esi = esi;
 		  userIn = new Scanner(System.in);
-  		  inputEmail = new Scanner(System.in);
-  		  inputPassword = new Scanner(System.in);	  
 	  }
 	  
 
@@ -30,7 +29,7 @@ public class UserMenu implements Displayable {
 	}
 	
 	
-	public void manageUserAccountInput() {
+	public void manageUserAccountInput() throws UserNotFoundException, InternalErrorException, SQLException {
  
 		String email,password;	
 		System.out.println("Select your type of account:\n 1. Customer \n 2. Employee");
@@ -43,12 +42,12 @@ public class UserMenu implements Displayable {
 	    	}
 	    	
 	    	else {
-	    		
+	    		this.userIn.nextLine();
 	    		System.out.println("You're awesome!\n");
     			System.out.println("Please enter your email: ");
-    			email = inputEmail.nextLine();
+    			email = userIn.nextLine();
     			System.out.println("Please enter your password: ");
-    			password = inputPassword.nextLine();
+    			password = userIn.nextLine();
 	    		if(accountType == 1) {
 	    			csi.userLogIn(email,password, true);
 	    		} //accountType == 2

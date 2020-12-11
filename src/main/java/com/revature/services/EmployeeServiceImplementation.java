@@ -1,22 +1,28 @@
 package com.revature.services;
 
+import java.sql.SQLException;
+
+import com.revature.exceptions.InternalErrorException;
+import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.User;
-import com.revature.repositories.UserImplementationDAO;
+//import com.revature.repositories.UserImplementationDAO;
+import com.revature.repositories.UserPostgresDAO;
 
 public class EmployeeServiceImplementation implements EmployeeService, UserService {
 	
 	
-	private UserImplementationDAO uid;
+	//private UserImplementationDAO uid;
+	private UserPostgresDAO upd;
 	
-	public EmployeeServiceImplementation(UserImplementationDAO uid) {
-		   this.uid = uid;
+	public EmployeeServiceImplementation(UserPostgresDAO upd) {
+		   this.upd = upd;
 	}
 	
 	//
-	public void userLogIn(String email, String password, boolean isCustomer) {
-		User user = uid.findOne(email, password, isCustomer);	
+	public void userLogIn(String email, String password, boolean isCustomer) throws UserNotFoundException, InternalErrorException, SQLException {
+		User user = upd.findOne(email, password, isCustomer);	
 		if(user!= null) {
-		   System.out.println("Welcome, "+ user.getEmail());
+		   System.out.println("Welcome, "+ user.getFirstName()+" "+user.getLastName());
 		}
 		else {
 			System.out.println(" User is not found");

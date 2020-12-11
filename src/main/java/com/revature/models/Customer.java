@@ -9,6 +9,10 @@ public class Customer extends User {
 			super.setCustomer(true);
 			
 		}
+		
+		public Customer() {
+			super.setCustomer(true);;
+		}
 
 
 		public CustomerStatus getCustomerStatus() {

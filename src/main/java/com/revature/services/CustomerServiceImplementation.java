@@ -1,15 +1,20 @@
 package com.revature.services;
 
-import com.revature.models.User;
-import com.revature.repositories.UserImplementationDAO;
+import java.sql.SQLException;
+
+import com.revature.exceptions.InternalErrorException;
+import com.revature.exceptions.UserNotFoundException;
+import com.revature.models.User; 
+import com.revature.repositories.UserPostgresDAO;
 
 public class CustomerServiceImplementation implements CustomerService,UserService {
     
-    private UserImplementationDAO uid;
+    //private UserImplementationDAO uid;
+    private UserPostgresDAO upd;
 	    
-	public CustomerServiceImplementation(UserImplementationDAO uid) {
+	public CustomerServiceImplementation(UserPostgresDAO upd) {
 		super();
-		this.uid = uid;
+		this.upd = upd;
 	}
 
 	public void viewBalance() {
@@ -38,13 +43,13 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
 	}
     
 	//Customer Login
-	public void userLogIn(String email, String password, boolean isCustomer) {
-		User user = uid.findOne(email, password, isCustomer);	
+	public void userLogIn(String email, String password, boolean isCustomer) throws UserNotFoundException, InternalErrorException, SQLException {
+		User user = upd.findOne(email, password, isCustomer);	
 		if(user!= null) {
-		   System.out.println("Welcome, "+ user.getEmail());
+		   System.out.println("Welcome, "+ user.getFirstName()+" "+user.getLastName());
 		}
 		else {
-			System.out.println(" User is not found");
+			System.out.println("User is not found!");
 		}
 	}
    

@@ -6,5 +6,9 @@ public class Employee extends User {
 		super(email, password);
 		super.setCustomer(false);
 	}
+	
+	public Employee() {
+		super.setCustomer(false);
+	}
 
 }
