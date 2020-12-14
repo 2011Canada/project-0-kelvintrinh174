@@ -1,24 +1,19 @@
 package com.revature.repositories;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import com.revature.models.Customer;
-import com.revature.models.Employee;
-import com.revature.models.User;
 
-public class UserImplementationDAO implements UserDAO{
-		
+public class UserImplementationDAO {
+		/*
 	   static List<User> listUser = new ArrayList<User>();
 	   
 	   static {
 		   
-		   User customerKelvin = new Customer("kelvintrinh@gmail.com","12345");
-		   User customerNick = new Customer("nick@gmail.com","12345");
+		  // User customerKelvin = new Customer("kelvintrinh@gmail.com","12345");
+		   //User customerNick = new Customer("nick@gmail.com","12345");
 		   User bankEmployee = new Employee("employeeTD001@td.ca","12345");
 		   
-		   listUser.add(customerKelvin);
-		   listUser.add(customerNick);
+		   //listUser.add(customerKelvin);
+		  // listUser.add(customerNick);
 		   listUser.add(bankEmployee);
 		}
 
@@ -29,7 +24,7 @@ public class UserImplementationDAO implements UserDAO{
 
 	public User findOne(String email, String password, boolean isCustomer) {
 		if(isCustomer) {
-			User customer = new Customer(email,password);
+			//User customer = new Customer(email,password);
 			
 			for(User user : listUser) {
 				if(user.equals(customer)) {
@@ -58,7 +53,7 @@ public class UserImplementationDAO implements UserDAO{
 		// TODO Auto-generated method stub
 		
 	}
-
+*/
 		
 	   
 	   

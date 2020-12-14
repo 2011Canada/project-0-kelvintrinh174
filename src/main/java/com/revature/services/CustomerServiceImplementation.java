@@ -22,13 +22,17 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
 
 	}
 
-	public void applyNewAccount(User customer) {
-		// TODO Auto-generated method stub
-
-	}
 
 	public void applyNewAccountWithBalance(User customer, double balance) {
-		// TODO Auto-generated method stub
+		  User user = upd.createCustomerAccount(customer, balance);
+		  if(user!= null) {
+			   System.out.println("Welcome, "+ user.getFirstName()+" "+user.getLastName());
+			   System.out.println("Thank you for registering new account! Your account is reviewed!");
+			}
+			else {
+				System.out.println("Creation is not successful!");
+			}
+		  
 
 	}
 

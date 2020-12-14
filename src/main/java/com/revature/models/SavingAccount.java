@@ -1,6 +1,6 @@
 package com.revature.models;
 
-public class SavingAccount extends BankingAccount {
+public class SavingAccount extends BankingAccount implements BankingActivity{
 	
 	private int accountNumber;
 	private double balance;
@@ -27,18 +27,21 @@ public class SavingAccount extends BankingAccount {
 		this.balance = balance;
 	}
 
-	
-	
-	@Override
-	void view() {
+	public void view() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
-	@Override
-	boolean deposit(double amount) {
+	public boolean deposit(double amount) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	public boolean withdraw(double amount) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
+	
 }

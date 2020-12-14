@@ -9,10 +9,14 @@ import com.revature.models.User;
 
 public interface UserDAO {
        
-	   public User saveOne(User user);
+	   
+	   public User createCustomerAccount(User user, double balance);
 	   public User findOne(String email, String password, boolean isCustomer) 
 			   throws UserNotFoundException, InternalErrorException, SQLException;
-       public List<User> findAll();
+       
+	   public List<User> findPendingCustomer()
+	   throws InternalErrorException, SQLException;
+	   public List<User> findAll();
        public void updateOne(int userId);
        
 }

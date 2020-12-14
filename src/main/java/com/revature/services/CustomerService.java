@@ -6,7 +6,6 @@ public interface CustomerService {
 	  
 	public void viewBalance();
 	
-	public void applyNewAccount(User customer);
 	public void applyNewAccountWithBalance(User customer, double balance);
 	
 	public boolean transferMoney(String email, double amount);

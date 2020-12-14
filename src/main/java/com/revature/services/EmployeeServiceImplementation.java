@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.revature.exceptions.InternalErrorException;
 import com.revature.exceptions.UserNotFoundException;
@@ -38,6 +39,21 @@ public class EmployeeServiceImplementation implements EmployeeService, UserServi
 	public void viewCustomerAccount() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public List<User> viewListPendingUser() throws InternalErrorException, SQLException {
+		// TODO Auto-generated method stub
+		List<User> list = upd.findPendingCustomer();
+		if(list.size() != 0) {
+			return list;
+		}
+		
+		return null;
+	}
+
+	public void viewCustomerAccount(String email) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

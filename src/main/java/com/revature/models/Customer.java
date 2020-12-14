@@ -4,8 +4,8 @@ public class Customer extends User {
 			  	 
 		private CustomerStatus customerStatus;
 	  
-		public Customer(String email, String password) {			
-			super(email, password);
+		public Customer(String email, String password, String firstName, String lastName) {			
+			super(email, password, firstName, lastName);
 			super.setCustomer(true);
 			
 		}

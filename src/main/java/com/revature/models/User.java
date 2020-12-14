@@ -9,10 +9,12 @@ public abstract class User {
      
 	private boolean isCustomer;
       
-	public User(String email, String password) {
+	public User(String email, String password, String firstName, String lastName) {
 		super();
 		this.email = email;
 		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 	
 	public User() {
@@ -72,8 +74,8 @@ public abstract class User {
 		this.isCustomer = isCustomer;
 	}
 
-	 @Override
-		public int hashCode() {
+	@Override
+	public int hashCode() {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + ((email == null) ? 0 : email.hashCode());
@@ -85,8 +87,8 @@ public abstract class User {
 			return result;
 		}
 
-		@Override
-		public boolean equals(Object obj) {
+	@Override
+	public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
 			if (obj == null)
@@ -120,6 +122,13 @@ public abstract class User {
 				return false;
 			return true;
 		}
+
+		@Override
+	
+	public String toString() {
+			return "User [email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + ", isCustomer="
+					+ isCustomer + "]";
+	}
 
 
 	
