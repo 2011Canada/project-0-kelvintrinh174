@@ -7,7 +7,7 @@ public interface BankingAccountDAO {
 		
 	   public BankingAccount saveOne(BankingAccount newAccount);
 	   public BankingAccount findOne(User userId);
-	   public void updateBalance(BankingAccount existingAccount, double balance);
+	   public boolean updateBalance(int bankId,BankingAccount existingAccount);
 	   public void updateAccount(BankingAccount account);
 	  
 	   

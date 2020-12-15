@@ -1,23 +1,27 @@
 package com.revature.models;
 
-public class ChequeingAccount extends BankingAccount implements BankingActivity{
+public class ChequeingAccount extends BankingAccount {
 	
-	private int accountNumber;
+	private String accountNumber;
 	private double balance;
 	
 	
-	public ChequeingAccount(int accountNumber, double balance) {
+	public ChequeingAccount(String accountNumber, double balance) {
 		this.accountNumber = accountNumber;
 		this.balance = balance;
 	}
 	
+	public ChequeingAccount() {
+		
+	}
 	
-	public int getAccountNumber() {
+	
+	public String getAccountNumber() {
 		return accountNumber;
 	}
 
-	public void setAccountNumber(int accountNumber) {
-		this.accountNumber = accountNumber;
+	public void setAccountNumber(String string) {
+		this.accountNumber = string;
 	}
 
 	public double getBalance() {
@@ -25,28 +29,20 @@ public class ChequeingAccount extends BankingAccount implements BankingActivity{
 	}
 
 	public void setBalance(double balance) {
-		this.balance = balance;
+		this.balance += balance;
+	}
+	
+	public void withDraw(double amount) {
+		this.balance -= amount;
 	}
 
 
-	public void view() {
-		// TODO Auto-generated method stub
-		
+	@Override
+	public String toString() {
+		return "ChequeingAccount [accountNumber=" + accountNumber + ", balance=" + balance + "]";
 	}
 
-
-	public boolean deposit(double amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	public boolean withdraw(double amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
+    
 	
 	
 	

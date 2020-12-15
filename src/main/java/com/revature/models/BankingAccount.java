@@ -3,14 +3,19 @@ package com.revature.models;
 public class BankingAccount {
 		
 	    private int customerId;
-	
+	    private int bankId;
 	    private String mailing_address;
 	    private boolean pendingTransaction;
 	    private BankingStatus bankingStatus;
 	    
 	    
-	    
-	    
+	    		
+		public int getBankId() {
+			return bankId;
+		}
+		public void setBankId(int bankId) {
+			this.bankId = bankId;
+		}
 		public int getCustomerId() {
 			return customerId;
 		}
@@ -30,11 +35,21 @@ public class BankingAccount {
 		public void setPendingTransaction(boolean pendingTransaction) {
 			this.pendingTransaction = pendingTransaction;
 		}
-		public BankingStatus getBankingStatus() {
-			return bankingStatus;
+		public String getBankingStatus() {
+			return bankingStatus.toString();
 		}
-		public void setBankingStatus(BankingStatus bankingStatus) {
-			this.bankingStatus = bankingStatus;
+		public void setBankingStatus(String bankingStatus) {
+			for(BankingStatus bs : BankingStatus.values()) {
+				if(bs.toString().equals(bankingStatus)) {
+					this.bankingStatus = bs; 
+				}
+			}
+			
+		}
+		@Override
+		public String toString() {
+			return "BankingAccount [pendingTransaction=" + pendingTransaction + ", bankingStatus=" + bankingStatus
+					+ "]";
 		}
 		
 		

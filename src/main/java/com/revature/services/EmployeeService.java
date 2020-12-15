@@ -10,5 +10,5 @@ public interface EmployeeService {
     
 	public List<User> viewListPendingUser() throws InternalErrorException, SQLException;
 	public boolean setCustomerStatus();
-	public void viewCustomerAccount(String email);
+	public void viewCustomerAccount(User customer);
 }

@@ -19,15 +19,19 @@ public class EmployeeServiceImplementation implements EmployeeService, UserServi
 		   this.upd = upd;
 	}
 	
+	
+	
 	//
-	public void userLogIn(String email, String password, boolean isCustomer) throws UserNotFoundException, InternalErrorException, SQLException {
+	public User userLogIn(String email, String password, boolean isCustomer) throws UserNotFoundException, InternalErrorException, SQLException {
 		User user = upd.findOne(email, password, isCustomer);	
 		if(user!= null) {
 		   System.out.println("Welcome, "+ user.getFirstName()+" "+user.getLastName());
+		   return user;
 		}
 		else {
 			System.out.println(" User is not found");
 		}
+		return null;
 
 	}
 
@@ -36,13 +40,12 @@ public class EmployeeServiceImplementation implements EmployeeService, UserServi
 		return false;
 	}
 
-	public void viewCustomerAccount() {
+	public void viewCustomerAccount(User customer) {
 		// TODO Auto-generated method stub
 
 	}
 
 	public List<User> viewListPendingUser() throws InternalErrorException, SQLException {
-		// TODO Auto-generated method stub
 		List<User> list = upd.findPendingCustomer();
 		if(list.size() != 0) {
 			return list;
@@ -51,9 +54,11 @@ public class EmployeeServiceImplementation implements EmployeeService, UserServi
 		return null;
 	}
 
-	public void viewCustomerAccount(String email) {
+
+    //Employee can view customer account using their email
+	public List<Object> viewCustomerInfo(User customer) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 }

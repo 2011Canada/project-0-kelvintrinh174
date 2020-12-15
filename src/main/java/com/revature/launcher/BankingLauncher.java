@@ -6,6 +6,8 @@ import java.util.InputMismatchException;
 import com.revature.exceptions.InternalErrorException;
 import com.revature.exceptions.UserNotFoundException;
 import com.revature.menus.UserMenu;
+import com.revature.repositories.BankingAccountDAO;
+import com.revature.repositories.BankingAccountPostgresDAO;
 import com.revature.repositories.UserPostgresDAO;
 import com.revature.services.CustomerServiceImplementation;
 import com.revature.services.EmployeeServiceImplementation;
@@ -18,7 +20,8 @@ public class BankingLauncher {
 SQLException, InputMismatchException {
 		
 		UserPostgresDAO uid = new UserPostgresDAO();
-		CustomerServiceImplementation csi = new CustomerServiceImplementation(uid);
+		BankingAccountPostgresDAO bad = new BankingAccountPostgresDAO();
+		CustomerServiceImplementation csi = new CustomerServiceImplementation(uid,bad);
 		EmployeeServiceImplementation esi = new EmployeeServiceImplementation(uid);
 		UserMenu userMenu = new UserMenu(csi,esi);
 

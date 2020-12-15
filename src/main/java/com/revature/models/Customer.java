@@ -11,16 +11,32 @@ public class Customer extends User {
 		}
 		
 		public Customer() {
-			super.setCustomer(true);;
+			super.setCustomer(true);
+		}
+		
+		public Customer(String customerStatus) {
+			super.setCustomer(true);
+			for(CustomerStatus cs : CustomerStatus.values()) {
+				if(cs.toString().equals(customerStatus)) {
+					this.customerStatus = cs;
+				}
+			}
 		}
 
 
-		public CustomerStatus getCustomerStatus() {
-			return customerStatus;
+		public String getCustomerStatus() {
+			return customerStatus.toString();
 		}
 
-		public void setCustomerStatus(CustomerStatus customerStatus) {
-			this.customerStatus = customerStatus;
+		public void setCustomerStatus(String customerStatus) {
+			
+			for(CustomerStatus cs : CustomerStatus.values()) {
+				if(cs.toString().equals(customerStatus)) {
+					this.customerStatus = cs;
+				}
+			}
+			
+			
 		}
 
 		  	  

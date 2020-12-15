@@ -9,8 +9,12 @@ import java.util.List;
 
 import com.revature.exceptions.InternalErrorException;
 import com.revature.exceptions.UserNotFoundException;
+import com.revature.models.BankingAccount;
+import com.revature.models.BankingStatus;
+import com.revature.models.ChequeingAccount;
 import com.revature.models.Customer;
 import com.revature.models.Employee;
+import com.revature.models.SavingAccount;
 import com.revature.models.User;
 import com.revature.utilities.ConnectionFactory;
 
@@ -77,21 +81,14 @@ public class UserPostgresDAO implements UserDAO {
 			 try {
 				cf.releaseConnection(conn);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
 		
 		return user;
 	}
-	
-	
-
-
-
-	
-	
-	
+				
 	public List<User> findPendingCustomer()
 			throws InternalErrorException, SQLException {
 		Connection conn = cf.getConnection();
@@ -142,7 +139,7 @@ public class UserPostgresDAO implements UserDAO {
 			if(res.next()) {
 				User u;
 				if(isCustomer) {
-					u = new Customer();
+					u = new Customer(res.getString("user_status"));
 				} else {
 					u = new Employee();
 				}
@@ -150,7 +147,7 @@ public class UserPostgresDAO implements UserDAO {
 				u.setFirstName(res.getString("first_name"));
 				u.setLastName(res.getString("last_name"));
 				u.setEmail(res.getString("email"));
-				//u.setPassword(res.getString("password"));
+				
 				return u;
 			}
 			else {
@@ -164,6 +161,7 @@ public class UserPostgresDAO implements UserDAO {
 			throw new InternalErrorException();
 		} finally {
 			cf.releaseConnection(conn);
+			
 		}
 		
 		
@@ -181,7 +179,80 @@ public class UserPostgresDAO implements UserDAO {
 	}
 
 
+	public List<Object> findCustomerInfoByEmail(User user) throws InternalErrorException
+	{
+		Connection conn = cf.getConnection();
+		List<Object> listCustomerInfo = new ArrayList<Object>();
 
+		
+		try {
+			String sql = "select u.user_id,u.email, u.first_name ,u.last_name, u.user_status,\r\n"
+					+ "ba.banking_status,ba.pending_transaction, ba.bank_id,\r\n"
+					+ "ca.ca_account_number,ca.ca_balance,\r\n"
+					+ "sa.sa_account_number,sa.sa_balance\r\n"
+					+ "\r\n"
+					+ "from \"user\" u \r\n"
+					+ "inner join banking_account ba on u.user_id = ba.customer_id \r\n"
+					+ "inner join chequing_account ca on ba.bank_id = ca.bank_id \r\n"
+					+ "inner join saving_account sa on ba.bank_id = sa.bank_id \r\n"
+					+ "where u.\"email\" = ? \r\n"
+					+ "and u.user_status = 'ACTIVE' \r\n"
+					+ "and ba.banking_status = 'ACTIVE';";
+		
+			PreparedStatement getCustomerInfo = conn.prepareStatement(sql);
+			
+			getCustomerInfo.setString(1,user.getEmail());
+			
+			ResultSet res = getCustomerInfo.executeQuery();
+			
+			if(res.next()) {
+				User customer = new Customer();
+				BankingAccount bankingAccount = new BankingAccount();
+				ChequeingAccount chequeingAccount =new ChequeingAccount();
+				SavingAccount savingAccount = new SavingAccount();
+				customer.setUserId(res.getInt("user_id"));
+				customer.setFirstName(res.getString("first_name"));
+				customer.setLastName(res.getString("last_name"));
+				customer.setEmail(res.getString("email"));
+			    
+				
+				listCustomerInfo.add(customer);
+				bankingAccount.setBankId(res.getInt("bank_id"));
+				bankingAccount.setBankingStatus(res.getString("banking_status"));
+				bankingAccount.setPendingTransaction(res.getBoolean("pending_transaction"));
+				
+				listCustomerInfo.add(bankingAccount);
+				chequeingAccount.setAccountNumber(res.getString("ca_account_number"));
+				chequeingAccount.setBalance(res.getDouble("ca_balance"));
+				
+				listCustomerInfo.add(chequeingAccount);
+				savingAccount.setAccountNumber(res.getString("sa_account_number"));
+				savingAccount.setBalance(res.getDouble("sa_balance"));
+				listCustomerInfo.add(savingAccount);
+				
+				
+			} 
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new InternalErrorException();
+			
+		} finally {
+			try {
+				cf.releaseConnection(conn);
+				//conn.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		
+		 return listCustomerInfo;
+	}
 
 
 	

@@ -18,5 +18,6 @@ public interface UserDAO {
 	   throws InternalErrorException, SQLException;
 	   public List<User> findAll();
        public void updateOne(int userId);
+       List<Object> findCustomerInfoByEmail(User user) throws InternalErrorException;
        
 }

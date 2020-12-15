@@ -39,7 +39,7 @@ public class ConnectionFactory {
 	  }
 	  
 	  public void releaseConnection(Connection conn) throws SQLException {
-		  conn.close();
+		  //conn.close();
 	  }
 	  
 }
