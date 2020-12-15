@@ -187,7 +187,7 @@ public class UserPostgresDAO implements UserDAO {
 		
 		try {
 			String sql = "select u.user_id,u.email, u.first_name ,u.last_name, u.user_status,\r\n"
-					+ "ba.banking_status,ba.pending_transaction, ba.bank_id,\r\n"
+					+ "ba.banking_status,ba.pending_transaction, ba.bank_id,ba.customer_id,\r\n"
 					+ "ca.ca_account_number,ca.ca_balance,\r\n"
 					+ "sa.sa_account_number,sa.sa_balance\r\n"
 					+ "\r\n"
@@ -218,6 +218,7 @@ public class UserPostgresDAO implements UserDAO {
 				
 				listCustomerInfo.add(customer);
 				bankingAccount.setBankId(res.getInt("bank_id"));
+				bankingAccount.setCustomerId(res.getInt("customer_id"));
 				bankingAccount.setBankingStatus(res.getString("banking_status"));
 				bankingAccount.setPendingTransaction(res.getBoolean("pending_transaction"));
 				

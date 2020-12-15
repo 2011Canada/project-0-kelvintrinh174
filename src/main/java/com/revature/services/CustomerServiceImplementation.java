@@ -8,8 +8,10 @@ import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.BankingAccount;
 import com.revature.models.ChequeingAccount;
 import com.revature.models.SavingAccount;
+import com.revature.models.Transaction;
 import com.revature.models.User;
 import com.revature.repositories.BankingAccountDAO;
+import com.revature.repositories.TransactionPosgresDAO;
 import com.revature.repositories.UserPostgresDAO;
 
 public class CustomerServiceImplementation implements CustomerService,UserService {
@@ -17,11 +19,13 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
     //private UserImplementationDAO uid;
     private UserPostgresDAO upd;
     private BankingAccountDAO bad;
+    private TransactionPosgresDAO tpd;
 	    
-	public CustomerServiceImplementation(UserPostgresDAO upd,BankingAccountDAO bad) {
+	public CustomerServiceImplementation(UserPostgresDAO upd,BankingAccountDAO bad,TransactionPosgresDAO tpd) {
 		super();
 		this.upd = upd;
 		this.bad = bad;
+		this.tpd = tpd;
 	}
 
 	public List<Object> viewCustomerInfo(User customer) {
@@ -75,9 +79,19 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
 	}
 	
 	
-	public boolean transferMoney(String email, double amount) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean transferMoney(String email, int userId,BankingAccount existingAccount,double amount) {
+		Transaction t = new Transaction();
+		t.setRepicientEmail(email);
+		
+		if(existingAccount instanceof ChequeingAccount) {
+			t.setSenderAccountNumber(((ChequeingAccount)existingAccount).getAccountNumber());
+		} else if (existingAccount instanceof SavingAccount){
+			t.setSenderAccountNumber(((SavingAccount)existingAccount).getAccountNumber());			
+		}
+		t.setSenderId(userId);
+		t.setTransactionAmount(amount);
+		Transaction newTransaction = tpd.saveOne(t);
+		return newTransaction != null ? true : false;
 	}
 
 	public boolean acceptMoneyTransfer() {

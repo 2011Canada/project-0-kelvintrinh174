@@ -192,6 +192,7 @@ public class UserMenu implements Displayable {
 			    case 4:
 			    	break;
 			    case 5:
+			    	sendMoney(user.getUserId(),bankingAccount,chequeingAccount,savingAccount);
 			    	break;
 			    default:
 			    	break;
@@ -264,8 +265,37 @@ public class UserMenu implements Displayable {
 		
 	}
 	//2.5
-	public void sendMoney() {
-		
+	public void sendMoney(int userId,BankingAccount ba, ChequeingAccount ca,SavingAccount sa) {
+		this.userIn.nextLine();   
+		System.out.println("Please enter the email of repicient:\n");
+		   String email = this.userIn.nextLine();
+		   System.out.println("Which account do you need to withdraw for sending money?\n"
+					+ "1. Chequing Account\n"
+					+ "2. Saving Account\n");
+			int option = this.userIn.nextInt();
+			System.out.println("Please enter your amount:\n");
+			double amount =this.userIn.nextDouble();
+			this.userIn.nextLine();
+			if(option ==1) {
+				if(csi.withdraw(ba.getBankId(),ca, amount)) {
+					
+					if(csi.transferMoney(email, userId, ca, amount))
+						System.out.println("You successfully transfer the money!");
+				}
+							
+			} else if(option == 2) {
+				if(csi.withdraw(ba.getBankId(), sa, amount))
+				{
+					if(csi.transferMoney(email, userId, sa, amount))
+						System.out.println("You successfully transfer the money!");
+				}
+			} else {
+				System.out.println("Please try again and enter 1 or 2\n");
+			}
+		  System.out.println("Please enter to come bank the main menu!\n");
+		  this.userIn.nextLine();
+		   //csi.transferMoney(email, ba.getBankId(), existingAccount, amount)
+		   
 	}
 	
 	//2.6

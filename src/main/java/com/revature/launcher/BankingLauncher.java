@@ -8,6 +8,7 @@ import com.revature.exceptions.UserNotFoundException;
 import com.revature.menus.UserMenu;
 import com.revature.repositories.BankingAccountDAO;
 import com.revature.repositories.BankingAccountPostgresDAO;
+import com.revature.repositories.TransactionPosgresDAO;
 import com.revature.repositories.UserPostgresDAO;
 import com.revature.services.CustomerServiceImplementation;
 import com.revature.services.EmployeeServiceImplementation;
@@ -21,7 +22,8 @@ SQLException, InputMismatchException {
 		
 		UserPostgresDAO uid = new UserPostgresDAO();
 		BankingAccountPostgresDAO bad = new BankingAccountPostgresDAO();
-		CustomerServiceImplementation csi = new CustomerServiceImplementation(uid,bad);
+		TransactionPosgresDAO tpd = new TransactionPosgresDAO();
+		CustomerServiceImplementation csi = new CustomerServiceImplementation(uid,bad,tpd);
 		EmployeeServiceImplementation esi = new EmployeeServiceImplementation(uid);
 		UserMenu userMenu = new UserMenu(csi,esi);
 
