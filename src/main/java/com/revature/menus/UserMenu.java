@@ -368,8 +368,17 @@ public class UserMenu implements Displayable {
 				+ "1. Chequing Account\n"
 				+ "2. Saving Account\n");
 		int option = this.userIn.nextInt();
-		System.out.println("Please enter your amount:\n");
-		double amount =this.userIn.nextDouble();
+		double amount;
+		while(true) {
+			System.out.println("Please enter your amount:\n");
+			amount =this.userIn.nextDouble();
+			if(amount>0)
+				break;
+			else {
+				System.out.println("Please enter positive amount!\n");
+			}
+		}
+		
 		this.userIn.nextLine();
 		if(option ==1) {
 			if(csi.deposit(ba.getBankId(),ca, amount))
@@ -389,8 +398,31 @@ public class UserMenu implements Displayable {
 				+ "1. Chequing Account\n"
 				+ "2. Saving Account\n");
 		int option = this.userIn.nextInt();
-		System.out.println("Please enter your amount:\n");
-		double amount =this.userIn.nextDouble();
+		double amount;
+		System.out.println(ca.getBalance());
+		while(true) {
+			System.out.println("Please enter your amount:\n");
+			amount =this.userIn.nextDouble();
+			if(amount>0)
+				break;
+			else {
+				System.out.println("Please enter positive amount!\n");
+			}			
+		}
+		while(true) {
+			System.out.println("Please enter your amount:\n");
+			amount =this.userIn.nextDouble();
+			if(option == 1 && (amount > ca.getBalance())) {
+				System.out.println("Your amount cannot bigger than the Chequing Account balance!\n");
+			} else if(option == 2 && (amount > sa.getBalance())){
+				System.out.println("Your amount cannot bigger than the Saving Account balance!\n");
+			} else {
+				break;
+			}
+			
+		}
+		//System.out.println("Please enter your amount:\n");
+		//double amount =this.userIn.nextDouble();
 		this.userIn.nextLine();
 		if(option ==1) {
 			if(csi.withdraw(ba.getBankId(),ca, amount))
@@ -406,48 +438,56 @@ public class UserMenu implements Displayable {
 	}
 	//2.4
 	public void viewPendingTransaction(int repicientId,BankingAccount ba, ChequeingAccount ca,SavingAccount sa) {
-		System.out.println("These below are your pending transactions: \n");
-		this.userIn.nextLine();
-		List<Transaction> list = csi.findRepicient(repicientId);
-		if(list.size()>0) {
-			System.out.println(list);
-			System.out.println("Please enter the transaction ID to accept: ");
-			int option = this.userIn.nextInt();
-			System.out.println(option);
-			for(Transaction t : list) {
-				if(t.getTransactionId() == option) {
-					System.out.println("Which account do you need to deposit?\n"
-							+ "1. Chequing Account\n"
-							+ "2. Saving Account\n");
-					int choice = this.userIn.nextInt();
-					this.userIn.nextLine();
-					if(choice ==1) {
-						if(csi.deposit(ba.getBankId(),ca, t.getTransactionAmount())) {
-							csi.acceptMoneyTransfer(t);
-							System.out.println("You successfully deposit to your account!");	
-						}
-								
-					} else if(choice == 2) {
-						if(csi.deposit(ba.getBankId(), sa, t.getTransactionAmount())) {
-							csi.acceptMoneyTransfer(t);
-							System.out.println("You successfully deposit to your account!");
-						}
-							
-					} else {
-						System.out.println("Please try again and enter 1 or 2\n");
-					}
+		while(true) {
+			System.out.println("These below are your pending transactions: \n");
+			this.userIn.nextLine();
+			List<Transaction> list = csi.findRepicient(repicientId);
+			if(list.size()>0) {
+				System.out.println(list);
+				System.out.println("Please enter the transaction ID to accept: ");
+				int option = this.userIn.nextInt();
+				System.out.println(option);
+				for(Transaction t : list) {
+					if(t.getTransactionId() == option) {
+						System.out.println("Which account do you need to deposit?\n"
+								+ "1. Chequing Account\n"
+								+ "2. Saving Account\n");
+						int choice = this.userIn.nextInt();
+						this.userIn.nextLine();
+						if(choice ==1) {
+							if(csi.deposit(ba.getBankId(),ca, t.getTransactionAmount())) {
+								csi.acceptMoneyTransfer(t);
+								System.out.println("You successfully deposit to your account!");	
+							}
 									
+						} else if(choice == 2) {
+							if(csi.deposit(ba.getBankId(), sa, t.getTransactionAmount())) {
+								csi.acceptMoneyTransfer(t);
+								System.out.println("You successfully deposit to your account!");
+							}
+								
+						} else {
+							System.out.println("Please try again and enter 1 or 2\n");
+						}
+										
+					}
 				}
 			}
+			else {
+				System.out.println("You don't have any pending transaction!");
+			}
+			
+			 System.out.println("Would you like to try another transaction! \n "
+						+ "1. Yes\n 2. No\n ");
+				int type = this.userIn.nextInt();
+				if(type == 2) {
+					break;
+				}	
 		}
-		else {
-			System.out.println("You don't have any pending transaction!");
-		}
 		
 		
-		
-	  System.out.println("Please enter to come bank the main menu!\n");
-	  this.userIn.nextLine();
+	  //System.out.println("Please enter to come bank the main menu!\n");
+	  //this.userIn.nextLine();
 	}
 	//2.5
 	public void sendMoney(int userId,BankingAccount ba, ChequeingAccount ca,SavingAccount sa) {
