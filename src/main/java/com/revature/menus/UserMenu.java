@@ -399,23 +399,23 @@ public class UserMenu implements Displayable {
 				+ "2. Saving Account\n");
 		int option = this.userIn.nextInt();
 		double amount;
-		System.out.println(ca.getBalance());
+		//System.out.println(ca.getBalance());
+//		while(true) {
+//			System.out.println("Please enter your amount:\n");
+//			amount =this.userIn.nextDouble();
+//			if(amount>0)
+//				break;
+//			else {
+//				System.out.println("Please enter positive amount!\n");
+//			}			
+//		}
 		while(true) {
 			System.out.println("Please enter your amount:\n");
 			amount =this.userIn.nextDouble();
-			if(amount>0)
-				break;
-			else {
-				System.out.println("Please enter positive amount!\n");
-			}			
-		}
-		while(true) {
-			System.out.println("Please enter your amount:\n");
-			amount =this.userIn.nextDouble();
-			if(option == 1 && (amount > ca.getBalance())) {
-				System.out.println("Your amount cannot bigger than the Chequing Account balance!\n");
-			} else if(option == 2 && (amount > sa.getBalance())){
-				System.out.println("Your amount cannot bigger than the Saving Account balance!\n");
+			if(option == 1 && (amount > ca.getBalance()) || amount <0) {
+				System.out.println("Your amount cannot withdraw amount bigger than the Chequing Account balance or less than 0!\n");
+			} else if(option == 2 && (amount > sa.getBalance() || amount < 0)){
+				System.out.println("Your amount cannot withdraw amount bigger than the Saving Account balance or less than 0!\n");
 			} else {
 				break;
 			}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.revature.exceptions.InternalErrorException;
 import com.revature.exceptions.UserNotFoundException;
+import com.revature.launcher.BankingLauncher;
 import com.revature.models.BankingAccount;
 import com.revature.models.ChequeingAccount;
 import com.revature.models.SavingAccount;
@@ -64,6 +65,7 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
 		} else if (existingAccount instanceof SavingAccount){
 			((SavingAccount)existingAccount).setBalance(amount);
 		}
+		BankingLauncher.p0174Logger.info("Banking Account with Id: "+bankId+" just got deposit: "+amount+"$!");
 		return bad.updateBalance(bankId ,existingAccount);
 		
 	}
@@ -91,6 +93,7 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
 		t.setSenderId(userId);
 		t.setTransactionAmount(amount);
 		Transaction newTransaction = tpd.saveOne(t);
+		BankingLauncher.p0174Logger.info("User with Id: "+userId+"just send "+amount+"$!");
 		return newTransaction != null ? true : false;
 	}
 
@@ -108,6 +111,7 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
 	//Customer Login
 	public User userLogIn(String email, String password, boolean isCustomer) throws UserNotFoundException, InternalErrorException, SQLException {
 		User user = upd.findOne(email, password, isCustomer);	
+		BankingLauncher.p0174Logger.info(user.getFirstName()+" "+user.getLastName()+" logged in!");
 		if(user!= null) {
 		   //System.out.println("Welcome, "+ user.getFirstName()+" "+user.getLastName());
 		   return user;
