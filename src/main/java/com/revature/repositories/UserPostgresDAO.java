@@ -259,7 +259,6 @@ public class UserPostgresDAO implements UserDAO {
 		
 	}
 
-	
 	public User findOne(String email, String password, boolean isCustomer) throws UserNotFoundException, InternalErrorException, SQLException{
 		
 		Connection conn = cf.getConnection();
