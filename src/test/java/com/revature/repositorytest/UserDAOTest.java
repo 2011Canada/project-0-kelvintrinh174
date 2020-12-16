@@ -25,6 +25,7 @@ public class UserDAOTest {
 		User userTest = new Customer("quang@gmail.com", "12345","Quang","Trung");
 		assertEquals(userTest.getEmail(), user.getEmail());
 		assertEquals(userTest.getFirstName(),user.getFirstName());
+		assertEquals(userTest.getLastName(),user.getLastName());
 		
 	}
 	
