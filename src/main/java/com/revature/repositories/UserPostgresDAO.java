@@ -88,6 +88,136 @@ public class UserPostgresDAO implements UserDAO {
 		
 		return user;
 	}
+	
+	public boolean acceptOne(User user,ChequeingAccount ca,SavingAccount sa) {
+		Connection conn = cf.getConnection();
+		try {
+			conn.setAutoCommit(false);
+			String bankIdSql = "select ba.bank_id from \"user\" u join banking_account ba \r\n"
+					+ "on u.user_id = ba.customer_id \r\n"
+					+ "where user_id = ?;";
+			PreparedStatement getBankId = conn.prepareStatement(bankIdSql);
+			getBankId.setInt(1, user.getUserId());
+			
+			ResultSet res = getBankId.executeQuery();
+			int bankId;
+			if(res.next()) {
+				bankId = res.getInt("bank_id");
+				
+			} else {
+				throw new SQLException();
+			}
+			
+			//update user and banking_account table
+			String userSql = "update \"user\" set user_status = 'ACTIVE' where user_id =?;";
+			PreparedStatement updateUser = conn.prepareStatement(userSql);
+			updateUser.setInt(1, user.getUserId());
+			updateUser.executeUpdate();
+			
+			String bankAccountSql = "update \"banking_account\" set banking_status = 'ACTIVE' where bank_id =?;";
+			PreparedStatement updateBankingAccount = conn.prepareStatement(bankAccountSql);
+			updateBankingAccount.setInt(1, bankId);
+			updateBankingAccount.executeUpdate();
+			
+			//insert chequing account
+			String insertCheckingAccountSql = "insert into chequing_account (bank_id,ca_account_number,ca_balance) \r\n"
+					+ "values(?,?,?);";
+			PreparedStatement insertCheckingAccount = conn.prepareStatement(insertCheckingAccountSql);
+			insertCheckingAccount.setInt(1, bankId);
+			insertCheckingAccount.setString(2, ca.getAccountNumber());
+			insertCheckingAccount.setDouble(3, ca.getBalance());
+			insertCheckingAccount.execute();
+			//insert savingaccount
+			String insertSavingAccountSql = "insert into saving_account (bank_id,sa_account_number,sa_balance) \r\n"
+					+ "values(?,?,?);";
+			PreparedStatement insertSavingAccount = conn.prepareStatement(insertSavingAccountSql);
+			insertSavingAccount.setInt(1, bankId);
+			insertSavingAccount.setString(2, sa.getAccountNumber());
+			insertSavingAccount.setDouble(3, sa.getBalance());
+			insertSavingAccount.execute();
+			return true;
+			
+		} catch(SQLException e) {
+			 e.printStackTrace();
+			  try {
+				  	conn.rollback();
+			  } catch(SQLException e1) {
+				  e1.printStackTrace();
+			  }
+		} finally {
+			try {
+				 conn.commit();
+				 conn.setAutoCommit(true);
+			 } catch (SQLException e) {
+				 e.printStackTrace();
+			 }
+			 
+			 try {
+				cf.releaseConnection(conn);
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	public boolean rejectOne(User user) {
+		Connection conn = cf.getConnection();
+		try {
+			conn.setAutoCommit(false);
+			String bankIdSql = "select ba.bank_id from \"user\" u join banking_account ba \r\n"
+					+ "on u.user_id = ba.customer_id \r\n"
+					+ "where user_id = ?;";
+			PreparedStatement getBankId = conn.prepareStatement(bankIdSql);
+			getBankId.setInt(1, user.getUserId());
+			
+			ResultSet res = getBankId.executeQuery();
+			int bankId;
+			if(res.next()) {
+				bankId = res.getInt("bank_id");
+				
+			} else {
+				throw new SQLException();
+			}
+			
+			//update user and banking_account table
+			String userSql = "update \"user\" set user_status = 'CLOSED' where user_id =?;";
+			PreparedStatement updateUser = conn.prepareStatement(userSql);
+			updateUser.setInt(1, user.getUserId());
+			updateUser.executeUpdate();
+			
+			String bankAccountSql = "update \"banking_account\" set banking_status = 'CLOSED' where bank_id =?;";
+			PreparedStatement updateBankingAccount = conn.prepareStatement(bankAccountSql);
+			updateBankingAccount.setInt(1, bankId);
+			updateBankingAccount.executeUpdate();
+			
+			return true;
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+			  try {
+				  	conn.rollback();
+			  } catch(SQLException e1) {
+				  e1.printStackTrace();
+			  }
+		}finally {
+			try {
+				 conn.commit();
+				 conn.setAutoCommit(true);
+			 } catch (SQLException e) {
+				 e.printStackTrace();
+			 }
+			 
+			 try {
+				cf.releaseConnection(conn);
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 				
 	public List<User> findPendingCustomer()
 			throws InternalErrorException, SQLException {
@@ -95,19 +225,26 @@ public class UserPostgresDAO implements UserDAO {
 		List<User> listPendingUser = new ArrayList<User>();
 		
 		try {
-			String sql = "select * from \"user\" where \"user_status\" = 'PENDING';";
+			String sql = "select u.user_id,u.email,u.first_name,u.last_name,u.user_status,\r\n"
+					+ "ba.bank_id,ba.banking_status ,ba.initial_deposit\r\n"
+					+ "from \"user\" u \r\n"
+					+ "join banking_account ba \r\n"
+					+ "on u.user_id  = ba.customer_id\r\n"
+					+ "where u.\"user_status\" = 'PENDING' and u.\"isCustomer\" = true;";
 			PreparedStatement getPendingUser = conn.prepareStatement(sql);
 			ResultSet res = getPendingUser.executeQuery();
-			
-			if(res.next()) {
+		
+			while(res.next()) {
 				User u = new Customer();
 				u.setUserId(res.getInt("user_id"));
 				u.setFirstName(res.getString("first_name"));
 				u.setLastName(res.getString("last_name"));
 				u.setEmail(res.getString("email"));
+				u.setInitialDeposit(res.getDouble("initial_deposit"));
 				
 				listPendingUser.add(u);
 			} 
+			
 			
 					
 		} catch (SQLException e) {
@@ -118,8 +255,8 @@ public class UserPostgresDAO implements UserDAO {
 			cf.releaseConnection(conn);
 		}
 		
-		
 		return listPendingUser;
+		
 	}
 
 	
@@ -172,13 +309,8 @@ public class UserPostgresDAO implements UserDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	public void updateOne(int userId) {
-		// TODO Auto-generated method stub
-
-	}
-
-
+	
+	
 	public List<Object> findCustomerInfoByEmail(User user) throws InternalErrorException
 	{
 		Connection conn = cf.getConnection();
@@ -205,7 +337,7 @@ public class UserPostgresDAO implements UserDAO {
 			
 			ResultSet res = getCustomerInfo.executeQuery();
 			
-			if(res.next()) {
+			while(res.next()) {
 				User customer = new Customer();
 				BankingAccount bankingAccount = new BankingAccount();
 				ChequeingAccount chequeingAccount =new ChequeingAccount();
@@ -254,7 +386,6 @@ public class UserPostgresDAO implements UserDAO {
 		
 		 return listCustomerInfo;
 	}
-
 
 	
 }

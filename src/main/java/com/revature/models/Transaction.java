@@ -80,10 +80,11 @@ public class Transaction {
 	}
 	@Override
 	public String toString() {
-		return "Transaction [senderFirstName=" + senderFirstName + ", senderLatName=" + senderLatName + ", senderEmail="
-				+ senderEmail + ", transactionAmount=" + transactionAmount
-				+ ", transactionStatus=" + transactionStatus + "]";
+		return "Transaction [transactionId=" + transactionId + ", senderFirstName=" + senderFirstName
+				+ ", senderLastName=" + senderLatName + ", senderEmail=" + senderEmail + ", transactionAmount="
+				+ transactionAmount + ", transactionStatus=" + transactionStatus + "]\n";
 	}
+
 	
 	
 	

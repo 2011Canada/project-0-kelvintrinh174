@@ -75,13 +75,25 @@ public class TransactionPosgresDAO implements TransactionDAO {
 		return null;
 	}
 
-
+    //accept the money transfer
 	public boolean updateOne(Transaction transaction) {
-		// TODO Auto-generated method stub
+		Connection conn = cf.getConnection();
+		try {
+			String sql = "update \"transaction\" set transaction_status = 'ACCEPTED' where transaction_id = ?;";
+			PreparedStatement acceptTransaction = conn.prepareStatement(sql);
+			acceptTransaction.setInt(1, transaction.getTransactionId());
+			
+			acceptTransaction.executeUpdate();
+			return true;
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
-
+    //repicient can find their pending transaction
 	public List<Transaction> findRepicient(int userId) {
 		Connection conn = cf.getConnection();
 		List<Transaction> list = new ArrayList<Transaction>();
@@ -100,7 +112,7 @@ public class TransactionPosgresDAO implements TransactionDAO {
 			ResultSet res = getTransaction.executeQuery();
 			
 			
-			if(res.next()) {
+			while(res.next()) {
 				Transaction transaction = new Transaction();
 				transaction.setSenderEmail(res.getString("email"));
 				transaction.setTransactionId(res.getInt("transaction_id"));

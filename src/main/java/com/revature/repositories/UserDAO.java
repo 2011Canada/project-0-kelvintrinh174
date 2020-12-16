@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.revature.exceptions.InternalErrorException;
 import com.revature.exceptions.UserNotFoundException;
+import com.revature.models.ChequeingAccount;
+import com.revature.models.SavingAccount;
 import com.revature.models.User;
 
 public interface UserDAO {
@@ -17,7 +19,8 @@ public interface UserDAO {
 	   public List<User> findPendingCustomer()
 	   throws InternalErrorException, SQLException;
 	   public List<User> findAll();
-       public void updateOne(int userId);
+       public boolean acceptOne(User user,ChequeingAccount ca,SavingAccount sa);
+       public boolean rejectOne(User user); 
        List<Object> findCustomerInfoByEmail(User user) throws InternalErrorException;
        
 }

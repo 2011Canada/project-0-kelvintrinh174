@@ -11,6 +11,7 @@ import com.revature.models.BankingAccount;
 import com.revature.models.ChequeingAccount;
 import com.revature.models.Customer;
 import com.revature.models.SavingAccount;
+import com.revature.models.Transaction;
 import com.revature.models.User;
 import com.revature.services.CustomerServiceImplementation;
 import com.revature.services.EmployeeServiceImplementation;
@@ -66,16 +67,22 @@ public class UserMenu implements Displayable {
 	    			User customer = csi.userLogIn(email,password, true);
 	    			if(customer.isCustomer()) {
 	    				//Enter customer menu
+	    				//this.userIn.nextLine();
 	    				manageCustomerAccount(customer);
 	    			};
 	    		}
 	    		else if(accountType == 3){
 	    			System.out.println("Welcome back to our bank!\n ");
+	    			this.userIn.nextLine();
 	    			System.out.println("Please enter your employee email: ");
 	    			email = this.userIn.nextLine();
 	    			System.out.println("Please enter your password: ");
 	    			password = this.userIn.nextLine();
-	    			esi.userLogIn(email,password, false);
+	    			User employee = esi.userLogIn(email,password, false);
+	    			if(!employee.isCustomer()) {
+	    				 
+	    				manageEmployeeAccount(employee);
+	    			}
 	    		}
 	    			    			    		
 	    	}
@@ -144,6 +151,142 @@ public class UserMenu implements Displayable {
 		this.userIn.nextLine();
 	}
 	
+	
+	
+	//3
+	public void manageEmployeeAccount(User employee) {
+		   while(true) {
+			   System.out.println("Please choose the option below!\n");
+			   System.out.println("1. View pending customer account\n"
+			   		+ "2. View a customer's bank account\n"
+			   		+ "3. View a log of all transactions\n"
+			   		+ "4. Return to the main menu\n");
+			  
+				System.out.println("Your choice is: ");
+				int option = this.userIn.nextInt();
+			   if(option == 4)
+				   break;
+			   switch(option) {
+			   		case 1:
+			   			viewPendingAccount();
+			   			break;
+			   		case 2:
+			   			viewCustomerBankAccount();
+			   			break;
+			   		case 3:
+			   			break;
+			   		default: {
+			   		 this.userIn.nextLine();
+						System.out.println("Please enter option 1, 2, or 3 ! \n");
+			   			break;
+			   		}
+			   			
+			   
+			   }
+			   
+			   
+			   
+				System.out.println("Would you like to come to the main menu! \n "
+						+ "1. Yes\n 2. No\n ");
+				int type = this.userIn.nextInt();
+				if(type == 1) {
+					break;
+				}
+		   }
+		   
+	}
+	
+	
+	//3.1
+	public void viewPendingAccount() {
+		while(true) {
+			 this.userIn.nextLine();
+			 System.out.println("This is the list of pending customers:\n");
+			 List<User> list=null;
+			 try {
+				 list = esi.viewListPendingUser();
+				 if(list != null) {
+					 System.out.println(list); 
+				 }
+				 else {
+					 System.out.println("There is no pending users!\n");
+				 }
+				
+			} catch (InternalErrorException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			 if(list!=null) {
+				 
+				 System.out.println("Please enter the customer id!\n");
+					int customerId = this.userIn.nextInt();
+					System.out.println("Which option do you choose:\n"
+							+ "1. Accept\n"
+							+ "2. Reject\n");
+					int option = this.userIn.nextInt();
+					User customer=null;
+					if(option == 1) {
+						
+						for(User u :list) {
+							if(u.getUserId()==customerId)
+								  customer = u;
+						}
+						if(esi.approveCustomer(customer))
+						   System.out.println("Customer is accepted!");
+						else {
+							System.out.println("There is something wrong");
+						}
+					}
+					else if(option ==2) {
+						for(User u :list) {
+							if(u.getUserId()==customerId)
+								  customer = u;
+						}
+						if(esi.rejectCustomer(customer)) {
+							System.out.println("Customer is rejected!");
+						} else {
+							System.out.println("There is something wrong");
+						}
+					} else {
+						System.out.println("Please enter 1 or 2!\n");
+					}
+			 } 
+			
+			
+			 System.out.println("Would you like to try another customer! \n "
+						+ "1. Yes\n 2. No\n ");
+				int type = this.userIn.nextInt();
+				if(type == 2) {
+					break;
+				}
+			 
+		}
+	}
+	
+	//3.2
+	public void viewCustomerBankAccount() {
+		   this.userIn.nextLine();
+		   System.out.println("Please enter the customer's email:\n");
+		   String email = this.userIn.nextLine();
+		   User customer = new Customer();
+		   customer.setEmail(email);
+		   List<Object> list = esi.viewCustomerInfo(customer);
+		   if(list.size()>0)
+			   System.out.println(list); 
+		   else {
+			   System.out.println("Customer is not found!\n");
+		   }
+	}
+	
+	//3.3
+	public void viewLogOfTransaction() {
+		
+	}
+	
+	
 	//2
 	public void manageCustomerAccount(User user) {
 		while(true)  {
@@ -190,6 +333,7 @@ public class UserMenu implements Displayable {
 			    	withdrawMoney(bankingAccount,chequeingAccount,savingAccount);
 			    	break;
 			    case 4:
+			    	viewPendingTransaction(user.getUserId(),bankingAccount,chequeingAccount,savingAccount);
 			    	break;
 			    case 5:
 			    	sendMoney(user.getUserId(),bankingAccount,chequeingAccount,savingAccount);
@@ -261,8 +405,49 @@ public class UserMenu implements Displayable {
 	  this.userIn.nextLine();
 	}
 	//2.4
-	public void viewPendingTransaction() {
+	public void viewPendingTransaction(int repicientId,BankingAccount ba, ChequeingAccount ca,SavingAccount sa) {
+		System.out.println("These below are your pending transactions: \n");
+		this.userIn.nextLine();
+		List<Transaction> list = csi.findRepicient(repicientId);
+		if(list.size()>0) {
+			System.out.println(list);
+			System.out.println("Please enter the transaction ID to accept: ");
+			int option = this.userIn.nextInt();
+			System.out.println(option);
+			for(Transaction t : list) {
+				if(t.getTransactionId() == option) {
+					System.out.println("Which account do you need to deposit?\n"
+							+ "1. Chequing Account\n"
+							+ "2. Saving Account\n");
+					int choice = this.userIn.nextInt();
+					this.userIn.nextLine();
+					if(choice ==1) {
+						if(csi.deposit(ba.getBankId(),ca, t.getTransactionAmount())) {
+							csi.acceptMoneyTransfer(t);
+							System.out.println("You successfully deposit to your account!");	
+						}
+								
+					} else if(choice == 2) {
+						if(csi.deposit(ba.getBankId(), sa, t.getTransactionAmount())) {
+							csi.acceptMoneyTransfer(t);
+							System.out.println("You successfully deposit to your account!");
+						}
+							
+					} else {
+						System.out.println("Please try again and enter 1 or 2\n");
+					}
+									
+				}
+			}
+		}
+		else {
+			System.out.println("You don't have any pending transaction!");
+		}
 		
+		
+		
+	  System.out.println("Please enter to come bank the main menu!\n");
+	  this.userIn.nextLine();
 	}
 	//2.5
 	public void sendMoney(int userId,BankingAccount ba, ChequeingAccount ca,SavingAccount sa) {
@@ -298,10 +483,7 @@ public class UserMenu implements Displayable {
 		   
 	}
 	
-	//2.6
-	public void manageEmployeeAccount() {
-		
-	}
+	
 	  
 	  
 	  

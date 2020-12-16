@@ -39,7 +39,7 @@ public class ChequeingAccount extends BankingAccount {
 
 	@Override
 	public String toString() {
-		return "ChequeingAccount [accountNumber=" + accountNumber + ", balance=" + balance + "]";
+		return "ChequeingAccount [accountNumber=" + accountNumber + ", balance=" + balance + "]\n";
 	}
 
     

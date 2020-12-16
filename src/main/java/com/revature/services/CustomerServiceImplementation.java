@@ -94,9 +94,15 @@ public class CustomerServiceImplementation implements CustomerService,UserServic
 		return newTransaction != null ? true : false;
 	}
 
-	public boolean acceptMoneyTransfer() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean acceptMoneyTransfer(Transaction transaction) {
+		
+		return tpd.updateOne(transaction);
+	}
+	
+	public List<Transaction> findRepicient(int repicientId) {
+		
+		return tpd.findRepicient(repicientId);
+
 	}
     
 	//Customer Login
