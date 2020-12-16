@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.revature.exceptions.InternalErrorException;
@@ -15,7 +16,13 @@ import com.revature.repositories.UserPostgresDAO;
 
 public class UserDAOTest {
 	
-	UserDAO ud = new UserPostgresDAO();	
+	private UserDAO ud;
+		
+	@Before
+	public void UserDAOImplementation() {
+		ud = new UserPostgresDAO();
+	}
+	
 	
 	@Test
 	public void logIn() throws UserNotFoundException, InternalErrorException, SQLException {

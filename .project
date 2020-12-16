@@ -20,11 +20,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>sqlScript/banking101.sql</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/banking101.sql</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>
